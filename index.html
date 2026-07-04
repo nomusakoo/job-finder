@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>나의 직업 찾기</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>나의 직업 찾기 🧭</h1>
+      <p class="subtitle">질문으로, 또는 조건으로 알아보는 나에게 맞는 직업</p>
+    </header>
+
+    <nav class="maintabs" id="mainTabs">
+      <button class="maintab active" data-view="quiz">성향 테스트</button>
+      <button class="maintab" data-view="filter">조건으로 찾기</button>
+    </nav>
+
+    <section class="view active" id="quizSection">
+      <div class="subview active" id="quizView">
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p class="q-counter" id="qCounter">1 / 8</p>
+
+        <div class="question-card">
+          <p class="question-text" id="questionText"></p>
+          <div class="options" id="optionsWrap"></div>
+        </div>
+      </div>
+
+      <div class="subview" id="resultView">
+        <div class="result-card">
+          <span class="result-emoji" id="resultEmoji">🎯</span>
+          <p class="result-eyebrow">나의 직업 유형은</p>
+          <h2 class="result-title" id="resultTitle"></h2>
+          <p class="result-sub" id="resultSub"></p>
+          <p class="result-desc" id="resultDesc"></p>
+
+          <div class="job-block">
+            <p class="job-block-title">이런 직업이 잘 맞아요</p>
+            <div class="job-tags" id="jobTags"></div>
+          </div>
+        </div>
+
+        <button class="cta" id="retryBtn">테스트 다시 하기</button>
+      </div>
+    </section>
+
+    <section class="view" id="filterSection">
+      <div class="filter-card">
+        <div class="filter-group">
+          <label for="majorSelect">전공</label>
+          <select id="majorSelect"></select>
+        </div>
+
+        <div class="filter-group">
+          <label for="regionSelect">지역</label>
+          <select id="regionSelect"></select>
+        </div>
+
+        <div class="filter-group">
+          <label>근로조건 <span class="filter-hint">(복수 선택 가능)</span></label>
+          <div class="chip-group" id="conditionChips"></div>
+        </div>
+
+        <button class="ghost-btn" id="resetFilterBtn">필터 초기화</button>
+      </div>
+
+      <p class="filter-count" id="filterCount"></p>
+      <div class="job-result-list" id="jobResultList"></div>
+    </section>
+
+    <footer>
+      <p>© 2026 나의 직업 찾기</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
