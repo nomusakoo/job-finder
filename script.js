@@ -411,24 +411,37 @@ CONDITIONS.forEach((label) => {
   conditionChips.appendChild(chip);
 });
 
-function matchesJob(job) {
+// 전공·지역은 정확히 일치해야 하고, 근로조건(복수 선택)은 다 만족하지
+// 않아도 1개 정도는 놓쳐도 결과에 포함시켜요(선택 개수 대비 대략 80~90% 이상 일치).
+function matchJob(job) {
   const major = majorSelect.value;
   const region = regionSelect.value;
 
   const majorOk = major === "전체" || job.majors.includes(major) || job.majors.includes("전공 무관");
   const regionOk = region === "전체" || job.regions.includes(region);
-  const conditionsOk = [...selectedConditions].every((c) => job.conditions.includes(c));
 
-  return majorOk && regionOk && conditionsOk;
+  const k = selectedConditions.size;
+  let matched = 0;
+  selectedConditions.forEach((c) => {
+    if (job.conditions.includes(c)) matched += 1;
+  });
+
+  const allowedMisses = k < 2 ? 0 : Math.max(1, Math.floor(k * 0.2));
+  const conditionsOk = k === 0 || k - matched <= allowedMisses;
+  const ratio = k === 0 ? 1 : matched / k;
+
+  return { ok: majorOk && regionOk && conditionsOk, k, ratio };
 }
 
 function renderFilteredJobs() {
-  const filtered = JOBS.filter(matchesJob);
+  const scored = JOBS.map((job) => ({ job, ...matchJob(job) }))
+    .filter(({ ok }) => ok)
+    .sort((a, b) => b.ratio - a.ratio);
 
-  filterCount.textContent = `조건에 맞는 직업 ${filtered.length}개`;
+  filterCount.textContent = `조건에 맞는 직업 ${scored.length}개`;
   jobResultList.innerHTML = "";
 
-  if (filtered.length === 0) {
+  if (scored.length === 0) {
     const empty = document.createElement("p");
     empty.className = "empty-state";
     empty.textContent = "조건에 맞는 직업이 없어요. 조건을 줄여보세요!";
@@ -437,7 +450,7 @@ function renderFilteredJobs() {
     return;
   }
 
-  filtered.forEach((job) => {
+  scored.forEach(({ job, k, ratio }) => {
     const card = document.createElement("div");
     card.className = "job-result-card";
 
@@ -445,10 +458,17 @@ function renderFilteredJobs() {
       .map((t) => `<span class="job-result-tag">${t}</span>`)
       .join("");
 
+    const percent = Math.round(ratio * 100);
+    const badge =
+      k > 0
+        ? `<span class="match-badge ${percent === 100 ? "full" : "partial"}">근로조건 일치율 ${percent}%</span>`
+        : "";
+
     card.innerHTML = `
       <div class="job-result-top">
         <span class="job-result-emoji">${job.emoji}</span>
         <p class="job-result-name">${job.name}</p>
+        ${badge}
       </div>
       <p class="job-result-desc">${job.desc}</p>
       <div class="job-result-tags">${tags}</div>

@@ -328,12 +328,46 @@ footer {
   padding: 4px 8px;
 }
 
+.filter-notice {
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: #6a4fd6;
+  background: #f2edff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  line-height: 1.5;
+}
+
 .filter-count {
   margin: 0;
   text-align: center;
   font-size: 0.85rem;
   color: #7a7a7a;
   font-weight: 600;
+}
+
+.job-result-top {
+  justify-content: space-between;
+}
+
+.match-badge {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.match-badge.full {
+  background: #eef6ec;
+  color: #4b9b5f;
+}
+
+.match-badge.partial {
+  background: #fff3e0;
+  color: #c98a1a;
 }
 
 .job-result-list {
